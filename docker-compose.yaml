@@ -26,34 +26,34 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./devstack/.env
+      - $PWD/devstack/.env
     volumes:
-      - ./devstack/postgres/data:/var/lib/postgresql/data/ # persist data even if container shuts down
+      - $PWD/devstack/postgres/data:/var/lib/postgresql/data/ # persist data even if container shuts down
 
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:4.15
     env_file:
-      - ./devstack/.env
+      - $PWD/devstack/.env
     depends_on:
       - "postgres"
     ports:
       - 5050:5050
     volumes:
-      - "./devstack/pgadmin/config/servers.json:/pgadmin4/servers.json"
+      - "$PWD/devstack/pgadmin/config/servers.json:/pgadmin4/servers.json"
 
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:management
     env_file:
-      - ./devstack/.env
+      - $PWD/devstack/.env
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
-      - ./devstack/rabbitmq/data:/var/lib/rabbitmq
-      - ./devstack/rabbitmq/logs:/var/log/rabbitmq
-      - ./devstack/rabbitmq/etc:/etc/rabbitmq
+      - $PWD/devstack/rabbitmq/data:/var/lib/rabbitmq
+      - $PWD/devstack/rabbitmq/logs:/var/log/rabbitmq
+      - $PWD/devstack/rabbitmq/etc:/etc/rabbitmq
 
   redis:
     container_name: redis
@@ -62,10 +62,10 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./devstack/redis/data:/var/lib/redis
-    #   - ./devstack/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - $PWD/devstack/redis/data:/var/lib/redis
+    #   - $PWD/devstack/redis/redis.conf:/usr/local/etc/redis/redis.conf
     env_file:
-      - ./devstack/.env
+      - $PWD/devstack/.env
 
   metrics_pushgateway:
     container_name: metrics_pushgateway
