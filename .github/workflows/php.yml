@@ -22,7 +22,7 @@ jobs:
     name: "${{ matrix.package }} - PHP ${{ matrix.php-version }} ${{ matrix.operating-system }}"
     env:
       php-extensions: swoole
-      key: cache-v001 # can be any string, change to clear the extension cache.
+      matrix-key: ${{ matrix.package }}-${{ matrix.php-version }}-${{ matrix.operating-system }}
     steps:
       - uses: actions/checkout@v2
 
@@ -74,18 +74,18 @@ jobs:
         uses: actions/cache@v2
         with:
           path: packages/${{ matrix.package }}/vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-${{ env.matrix-key }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-${{ env.matrix-key }}-php-
 
       - name: Cache vendor-bin/tools/vendor/ packages
         id: composer-bin-cache
         uses: actions/cache@v2
         with:
           path: packages/${{ matrix.package }}/vendor-bin/tools/vendor
-          key: ${{ runner.os }}-php-bin-${{ hashFiles('**/vendor-bin/**/composer.lock') }}
+          key: ${{ runner.os }}-${{ env.matrix-key }}-php-bin-${{ hashFiles('**/vendor-bin/**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-bin-
+            ${{ runner.os }}-${{ env.matrix-key }}-php-bin-
 
       - name: Validate composer.json and composer.lock
         run: composer --working-dir=packages/${{ matrix.package }} validate
@@ -109,5 +109,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.operating-system }}-${{ matrix.php-version }}-reports
-          path: reports/
+          name: ${{ env.matrix-key }}-reports
+          path: packages/${{ matrix.package }}/reports/
