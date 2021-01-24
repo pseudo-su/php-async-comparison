@@ -64,9 +64,6 @@ jobs:
 
       # -- App
 
-      - name: Validate composer.json and composer.lock
-        run: cd packages/${{ matrix.package }} composer validate
-
       - name: Cache vendor/ packages
         id: composer-cache
         uses: actions/cache@v2
@@ -85,9 +82,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-bin-
 
+      - name: Validate composer.json and composer.lock
+        run: cd packages/${{ matrix.package }} && composer validate
+
       - name: Install Composer dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: cd packages/${{ matrix.package }} && composer install --prefer-dist --no-progress --no-suggest
 
       - name: Verify
         run: cd packages/${{ matrix.package }} && composer verify
