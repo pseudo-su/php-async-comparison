@@ -11,9 +11,13 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest]
-        php-version: ['8.0']
-        package: ["reactphp", swoole]
+        operating-system:
+          - ubuntu-latest
+        php-version:
+          - '8.0'
+        package:
+          - reactphp
+          # - swoole
     name: "${{ matrix.package }} - PHP ${{ matrix.php-version }} ${{ matrix.operating-system }}"
     env:
       php-extensions: swoole
