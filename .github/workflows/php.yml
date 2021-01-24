@@ -98,7 +98,7 @@ jobs:
         run: composer --working-dir=packages/${{ matrix.package }} verify
 
       - name: Start devstack
-        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up -d devstack_app
+        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up --build -d devstack_app
 
       - name: Run all tests
         run: composer --working-dir=packages/${{ matrix.package }} test
