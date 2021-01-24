@@ -1,4 +1,4 @@
-FROM php:8.0-cli-alpine as builder
+FROM phpswoole/swoole:4.6.1-php8.0-alpine as builder
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -19,7 +19,7 @@ RUN composer dump-autoload \
         --no-dev \
         --optimize
 
-FROM php:8.0-cli-alpine as server
+FROM phpswoole/swoole:4.6.1-php8.0-alpine as server
 
 WORKDIR /app
 
