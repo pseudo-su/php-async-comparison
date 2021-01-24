@@ -1,14 +1,14 @@
 {
-    "name": "pseudo-su/php-service-template",
+    "name": "pseudo-su/example-swoole",
     "description": "ReactPHP service-template",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
         "php": "^8.0",
-        "ext-swoole": "*",
-        "php-amqplib/php-amqplib": "^2.12",
-        "slim/slim": "4.*"
+        "react/event-loop": "^1.1",
+        "react/http": "^1.2",
+        "react/promise": "^2.8"
     },
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.4"
@@ -21,14 +21,6 @@
         "test:integration": "php vendor/bin/phpunit --testsuite IntegrationWhitebox,IntegrationBlackbox",
         "test:integration:whitebox": "php vendor/bin/phpunit --testsuite IntegrationWhitebox",
         "test:integration:blackbox": "php vendor/bin/phpunit --testsuite IntegrationBlackbox",
-        "devstack:restart": [
-            "@devstack:stop",
-            "@devstack:start"
-        ],
-        "devstack:start": "docker-compose up -d --remove-orphans devstack_app",
-        "devstack:start:rebuild": "docker-compose up -d --build --remove-orphans devstack_app",
-        "devstack:run": "docker-compose run devstack_cli",
-        "devstack:stop": "docker-compose down --remove-orphans",
         "verify": [
             "php vendor/bin/phpcs",
             "php vendor/bin/psalm"

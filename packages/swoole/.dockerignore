@@ -1,0 +1,16 @@
+### Keep in sync with .gitignore
+
+# Tools
+/vendor/
+/vendor-bin/*/vendor/
+/cache
+
+# Output
+/reports
+
+# IDE
+/.vscode/
+/.idea/
+
+# MacOS
+/.DS_Store
