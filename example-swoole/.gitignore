@@ -1,0 +1,16 @@
+# Tools
+/vendor/
+/vendor-bin/*/vendor/
+/cache
+/*.env.local
+/*.env.*.local
+
+# Output
+/reports
+
+# IDE
+/.vscode/
+/.idea/
+
+# MacOS
+/.DS_Store
