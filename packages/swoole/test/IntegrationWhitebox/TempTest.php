@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pseudo\PhpServiceTemplate\Test\IntegrationWhitebox;
+namespace Pseudo\AsyncExamples\Swoole\Test\IntegrationWhitebox;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Pseudo\PhpServiceTemplate\AppConfig
+ * @covers \Pseudo\AsyncExamples\Swoole\AppConfig
  */
 class TempTest extends TestCase
 {

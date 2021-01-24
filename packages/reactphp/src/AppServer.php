@@ -1,6 +1,6 @@
 <?php
 
-namespace Pseudo\PhpServiceTemplate;
+namespace Pseudo\AsyncExamples\ReactPHP;
 
 use React\Http\Server as HttpServer;
 use React\EventLoop\LoopInterface;

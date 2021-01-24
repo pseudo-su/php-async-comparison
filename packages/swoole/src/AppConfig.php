@@ -1,6 +1,6 @@
 <?php
 
-namespace Pseudo\PhpServiceTemplate;
+namespace Pseudo\AsyncExamples\Swoole;
 
 class AppConfig
 {

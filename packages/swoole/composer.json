@@ -47,12 +47,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Pseudo\\PhpServiceTemplate\\": "src/"
+            "Pseudo\\AsyncExamples\\Swoole\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Pseudo\\PhpServiceTemplate\\Test\\": "test/"
+            "Pseudo\\AsyncExamples\\Swoole\\Test\\": "test/"
         }
     }
 }

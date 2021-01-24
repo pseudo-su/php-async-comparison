@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pseudo\PhpServiceTemplate\Test\IntegrationBlackbox;
+namespace Pseudo\AsyncExamples\ReactPHP\Test\IntegrationBlackbox;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Pseudo\PhpServiceTemplate\AppServer
+ * @covers \Pseudo\AsyncExamples\ReactPHP\AppServer
  */
 class TempTest extends TestCase
 {

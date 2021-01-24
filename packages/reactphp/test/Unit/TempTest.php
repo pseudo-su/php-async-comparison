@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pseudo\PhpServiceTemplate\Test\Unit;
+namespace Pseudo\AsyncExamples\ReactPHP\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Pseudo\PhpServiceTemplate\AppServer
+ * @covers \Pseudo\AsyncExamples\ReactPHP\AppServer
  */
 class TempTest extends TestCase
 {

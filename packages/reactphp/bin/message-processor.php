@@ -4,7 +4,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use React\EventLoop\Factory;
 use React\Socket\Server as SocketServer;
-use Pseudo\PhpServiceTemplate\AppServer;
+use Pseudo\AsyncExamples\ReactPHP\AppServer;
 
 $loop = Factory::create();
 
