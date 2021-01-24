@@ -7,7 +7,7 @@ namespace Pseudo\PhpServiceTemplate\Test\Unit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Pseudo\PhpServiceTemplate\AppServer
+ * @covers \Pseudo\PhpServiceTemplate\AppConfig
  */
 class TempTest extends TestCase
 {
