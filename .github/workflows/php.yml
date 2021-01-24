@@ -83,20 +83,20 @@ jobs:
             ${{ runner.os }}-php-bin-
 
       - name: Validate composer.json and composer.lock
-        run: cd packages/${{ matrix.package }} && composer validate
+        run: composer --working-dir=packages/${{ matrix.package }} validate
 
       - name: Install Composer dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: cd packages/${{ matrix.package }} && composer install --prefer-dist --no-progress --no-suggest
+        run: composer --working-dir=packages/${{ matrix.package }} install --prefer-dist --no-progress --no-suggest
 
       - name: Verify
-        run: cd packages/${{ matrix.package }} && composer verify
+        run: composer --working-dir=packages/${{ matrix.package }} verify
 
       - name: Start devstack
         run: docker-compose up -d devstack_app
 
       - name: Run all tests
-        run: cd packages/${{ matrix.package }} && test
+        run: composer --working-dir=packages/${{ matrix.package }} test
 
       - name: Stop devstack
         if: ${{ always() }}
