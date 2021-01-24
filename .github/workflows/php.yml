@@ -10,6 +10,7 @@ jobs:
   run:
     runs-on: ${{ matrix.operating-system }}
     strategy:
+      fail-fast: false
       matrix:
         operating-system:
           - ubuntu-latest
@@ -17,7 +18,7 @@ jobs:
           - '8.0'
         package:
           - reactphp
-          # - swoole
+          - swoole
     name: "${{ matrix.package }} - PHP ${{ matrix.php-version }} ${{ matrix.operating-system }}"
     env:
       php-extensions: swoole
