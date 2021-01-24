@@ -97,14 +97,14 @@ jobs:
         run: composer --working-dir=packages/${{ matrix.package }} verify
 
       - name: Start devstack
-        run: docker-compose up -d devstack_app
+        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up -d devstack_app
 
       - name: Run all tests
         run: composer --working-dir=packages/${{ matrix.package }} test
 
       - name: Stop devstack
         if: ${{ always() }}
-        run: docker-compose down
+        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  down
 
       - uses: actions/upload-artifact@v2
         with:

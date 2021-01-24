@@ -1,58 +1,5 @@
 version: "3"
 services:
-  # Containers for local development
-
-  # devstack_cli:
-  #   container_name: devstack_cli
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.dev
-  #   restart: "no"
-  #   depends_on:
-  #     - devstack_tools
-  #     - devstack_app
-  #   env_file: $PWD/devstack/.env
-  #   volumes:
-  #     - .:/app
-
-  # devstack_app:
-  #   image: tianon/true
-  #   restart: "no"
-  #   depends_on:
-  #     - devstack_app_deps
-  #     - http_server
-  #     - message_processor
-
-  # http_server:
-  #   container_name: http_server
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   env_file: $PWD/devstack/.env
-  #   environment:
-  #     PORT: 8080
-  #   ports:
-  #     - "8080:8080"
-  #   volumes:
-  #     - ./bin:/app/bin
-  #     - ./src:/app/src
-  #   command:
-  #     - php
-  #     - bin/http-server.php
-
-  # message_processor:
-  #   container_name: message_processor
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   env_file: $PWD/devstack/.env
-  #   volumes:
-  #     - ./bin:/app/bin
-  #     - ./src:/app/src
-  #   command:
-  #     - php
-  #     - bin/message-processor.php
-
   # Containers for local development external deps
 
   devstack_app_deps:
