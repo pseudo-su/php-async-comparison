@@ -137,11 +137,13 @@ jobs:
         run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml down
 
       - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: ${{ env.matrix-key }}-reports
           path: projects/${{ matrix.package }}/reports/
 
       - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: ${{ env.matrix-key }}-acceptance-test-reports
           path: acceptance-tests/reports/
@@ -157,11 +159,11 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          path: artifacts
+          path: reports/
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.7
         with:
           check_name: Unit Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: "**/reports/**/junit.xml"
+          files: "reports/**/junit.xml"
