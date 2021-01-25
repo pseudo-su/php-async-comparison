@@ -37,7 +37,7 @@ class AppServer
             });
         };
         $appHandlerFn = function (ServerRequestInterface $request): Response {
-            return new Response(200, [], '{"ok": true}');
+            return new Response(200, [], '{"data": [{ "id": "33c70830-2256-456f-b2b6-78ce5fabbb94"}]}');
         };
 
         return new HttpServer($this->loop, $middlewareFn, $appHandlerFn);

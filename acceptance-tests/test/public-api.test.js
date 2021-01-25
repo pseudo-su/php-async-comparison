@@ -3,12 +3,21 @@ const jestOpenAPI = require("jest-openapi");
 const { PostmanBuilder } = require("../src/postman");
 const { envConfig } = require("./config");
 
-const { OPENAPI_FILEPATH, API_SCHEME, API_HOST, API_PORT, API_PATH } = envConfig;
+const {
+  OPENAPI_FILEPATH,
+  API_SCHEME,
+  API_HOST,
+  API_PORT,
+  API_PATH,
+} = envConfig;
 
 jestOpenAPI(OPENAPI_FILEPATH);
 
 function baseUrl() {
-  return `${API_SCHEME}://${API_HOST}:${API_PORT}${API_PATH}`;
+  const url = `${API_SCHEME}://${API_HOST}:${API_PORT}${API_PATH}`;
+  const noTrailingSlash = url.replace(/\/$/, "");
+
+  return noTrailingSlash;
 }
 
 function createRequest() {
@@ -31,15 +40,13 @@ describe("API Acceptance", () => {
     postmanBuilder.write();
   });
 
-  describe("Internal API", () => {
-    test("GET /examples", async () => {
-      let request = createRequest().get(`/examples`);
+  test("GET /examples", async () => {
+    let request = createRequest().get(`/examples`);
 
-      postmanBuilder.addRequest(request, getTestDescription());
+    postmanBuilder.addRequest(request, getTestDescription());
 
-      const response = await request;
-      expect(response.status).toEqual(200);
-      expect(response).toSatisfyApiSpec();
-    });
+    const response = await request;
+    expect(response.status).toEqual(200);
+    expect(response).toSatisfyApiSpec();
   });
 });

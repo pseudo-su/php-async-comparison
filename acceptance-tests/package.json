@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest -- test/*",
     "verify": "npm-run-all verify:eslint verify:spectral",
-    "verify:eslint": "eslint --max-warnings=0 src suites *js",
+    "verify:eslint": "eslint --max-warnings=0 src test *js",
     "verify:spectral": "spectral lint \"suites/**/(*openapi|*asyncapi).yaml\"",
     "verify:fix": "npm-run-all verify:fix:eslint verify:spectral",
     "verify:fix:eslint": "eslint --max-warnings=0 --fix src suites *js"

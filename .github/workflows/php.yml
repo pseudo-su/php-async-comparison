@@ -7,13 +7,30 @@ on:
     branches: [main]
 
 jobs:
-  run:
+  validate-acceptance-tests:
+    runs-on: ubuntu-20.04
+    name: "Validate acceptance tests"
+    steps:
+      - uses: actions/checkout@v2
+
+      # -- Acceptance tests
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          check-latest: true
+      - run: yarn --cwd acceptance-tests/ install --frozen-lockfile
+
+      # -- Verify test suite
+      - name: Verify acceptance-tests
+        run: yarn --cwd acceptance-tests/ verify
+
+  validate-projects:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
       matrix:
         operating-system:
-          - ubuntu-latest
+          - ubuntu-20.04
         php-version:
           - '8.0'
         package:
@@ -40,7 +57,6 @@ jobs:
             ${{ runner.os }}-buildx-
 
       # -- PHP tools
-
       - name: Setup cache environment
         id: extcache
         uses: shivammathur/cache-extensions@v1
@@ -67,15 +83,14 @@ jobs:
         env:
           fail-fast: true
 
-      # -- Acceptance tests
+      # -- Acceptance tests setup
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
           check-latest: true
       - run: yarn --cwd acceptance-tests/ install --frozen-lockfile
 
-      # -- App
-
+      # -- App setup
       - name: Cache vendor/
         id: composer-cache
         uses: actions/cache@v2
@@ -101,7 +116,8 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer --working-dir=projects/${{ matrix.package }} install --prefer-dist --no-progress --no-suggest
 
-      - name: Verify
+      # -- App
+      - name: Verify project
         run: composer --working-dir=projects/${{ matrix.package }} verify
 
       - name: Start devstack_app_deps

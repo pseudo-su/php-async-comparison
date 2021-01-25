@@ -12,11 +12,9 @@ const env = envalid.cleanEnv(
   { strict: true, dotEnvPath: null }
 );
 
-const reporters = [
-  "default",
-  "jest-html-reporter",
-  "jest-junit",
-].filter(Boolean);
+const reporters = ["default", "jest-html-reporter", "jest-junit"].filter(
+  Boolean
+);
 
 module.exports = {
   setupFiles: [require.resolve("./src/load-dotenv")],
