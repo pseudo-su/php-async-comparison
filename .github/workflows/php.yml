@@ -67,6 +67,13 @@ jobs:
         env:
           fail-fast: true
 
+      # -- Acceptance tests
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          check-latest: true
+      - run: yarn --cwd acceptance-tests/ install --frozen-lockfile
+
       # -- App
 
       - name: Cache vendor/
@@ -106,7 +113,7 @@ jobs:
       - name: Start devstack_app
         run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml up --build -d devstack_app
 
-      - name: Run project unit and (whitebox) integration tests
+      - name: Run project acceptance tests
         run: yarn --cwd acceptance-tests/ test
 
       - name: Stop devstack
