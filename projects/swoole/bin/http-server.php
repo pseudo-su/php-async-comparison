@@ -2,60 +2,45 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
+use Swoole\Constant;
 use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
-use Slim\App;
-
 $host = getenv('HOST') ?: '0.0.0.0';
 $port = getenv('PORT') ?: '8080';
 
-$server = new Server($host, $port);
+$server = new Server($host, (int) $port);
 
-// a swoole server is evented just like express
-$server->on('start', function (Server $server) use ($host, $port) {
-    echo sprintf('Swoole http server is started at http://%s:%s' . PHP_EOL, $host, $port);
-});
+// All the options set here are optional.
+$server->set(
+    [
+        Constant::OPTION_HTTP_COMPRESSION       => true,
+        Constant::OPTION_HTTP_COMPRESSION_LEVEL => 5,
+    ]
+);
 
-// handle all requests with this response
-$server->on('request', function (Request $req, Response $res) {
-    // populate the global state with the request info
-    $_SERVER['REQUEST_URI'] = $req->server['request_uri'];
-    $_SERVER['REQUEST_METHOD'] = $req->server['request_method'];
-    $_SERVER['REMOTE_ADDR'] = $req->server['remote_addr'];
+$server->on(
+    "request",
+    function (Request $request, Response $response) {
+        // Next method call is to show how to change HTTP status code from the default one (200) to something else.
+        $response->status('200');
 
-    $_GET = $req->get ?? [];
-    $_POST = $req->post ?? $req->rawContent();
-    $_FILES = $req->files ?? [];
+        $response->header('Content-Type', 'application/json');
 
-    // each request should create a new App()
-    $app = new App();
-
-    // example of a JSON response
-    $app->get('/examples', function ($request, $response, $args) {
-        return $response->withJson([
-            'data' => [
-                [ 'id' => '33c70830-2256-456f-b2b6-78ce5fabbb94' ]
-            ]
-        ]);
-    });
-
-    // suppress output by passing "true"
-    $slim = $app->run(null);
-
-    // transfer the Slim headers to the Swoole app
-    foreach ($slim->getHeaders() as $key => $value) {
-        // content length is set when calling "end"
-        if ($key !== 'Content-Length') {
-            $res->header($key, $value[0]);
-        }
+        $response->end(
+            <<<EOT
+            {
+                "meta": {},
+                "errors": [],
+                "data": [
+                    {
+                        "id": "33c70830-2256-456f-b2b6-78ce5fabbb94"
+                    }
+                ]
+            }
+            EOT
+        );
     }
-
-    $res->status($slim->getStatusCode());
-
-    // write the output
-    $res->end($slim->getBody());
-});
-
+);
 $server->start();
