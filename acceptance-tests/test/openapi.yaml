@@ -37,26 +37,6 @@ paths:
 
 components:
   schemas:
-    PaginationMeta:
-      type: object
-      required:
-        - count
-        - limit
-        - offset
-        - total
-      properties:
-        count:
-          type: integer
-          example: 10
-        limit:
-          type: integer
-          example: 10
-        offset:
-          type: integer
-          example: 0
-        total:
-          type: integer
-          example: 100
 
     ErrorObject:
       required:
@@ -114,11 +94,8 @@ components:
         - $ref: "#/components/schemas/DefaultSuccessResponseBody"
         - type: object
           required:
-            - meta
             - data
           properties:
-            meta:
-              $ref: "#/components/schemas/PaginationMeta"
             data:
               type: array
               description: List of orders
