@@ -20,11 +20,8 @@
         <testsuite name="Unit">
             <directory suffix="Test.php">test/Unit</directory>
         </testsuite>
-        <testsuite name="IntegrationWhitebox">
-            <directory suffix="Test.php">test/IntegrationWhitebox</directory>
-        </testsuite>
-        <testsuite name="IntegrationBlackbox">
-            <directory suffix="Test.php">test/IntegrationBlackbox</directory>
+        <testsuite name="Integration">
+            <directory suffix="Test.php">test/Integration</directory>
         </testsuite>
     </testsuites>
 

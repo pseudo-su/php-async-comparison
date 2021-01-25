@@ -1,5 +1,5 @@
 {
-    "name": "pseudo-su/example-swoole",
+    "name": "pseudo-su/project-swoole",
     "description": "ReactPHP service-template",
     "type": "project",
     "license": "MIT",
@@ -18,9 +18,7 @@
         "message-processor:start": "@php bin/message-processor.php",
         "test": "php vendor/bin/phpunit",
         "test:unit": "php vendor/bin/phpunit --testsuite Unit",
-        "test:integration": "php vendor/bin/phpunit --testsuite IntegrationWhitebox,IntegrationBlackbox",
-        "test:integration:whitebox": "php vendor/bin/phpunit --testsuite IntegrationWhitebox",
-        "test:integration:blackbox": "php vendor/bin/phpunit --testsuite IntegrationBlackbox",
+        "test:integration": "php vendor/bin/phpunit --testsuite Integration",
         "verify": [
             "php vendor/bin/phpcs",
             "php vendor/bin/psalm"

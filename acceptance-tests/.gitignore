@@ -1,0 +1,8 @@
+node_modules
+tmp
+*log
+.env.local
+.env.*.local
+.vscode/
+results/
+package-lock.json

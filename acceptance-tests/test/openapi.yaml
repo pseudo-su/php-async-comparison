@@ -1,0 +1,486 @@
+openapi: 3.0.0
+info:
+  title: Click and Collect
+  description: Handles updating of click and collect orders (catch stock) and sending reminder emails (3rd party stock).
+  version: 1.0.23
+  contact:
+    email: dev-custservice@catch.com.au
+
+servers:
+  - description: Testing Internal API (RBT)
+    url: 'https://click-and-collect.rbt.cgws.com.au'
+  - description: Testing Partner API (RBT)
+    url: 'https://click-and-collect-public.rbt.cgws.com.au'
+  - description: Production Internal API
+    url: 'https://click-and-collect.absinthe.cgws.com.au'
+  - description: Production Partner API
+    url: 'https://click-and-collect-public.absinthe.cgws.com.au'
+
+tags:
+  - name: Internal API
+    description: Internal API accessible whilst connected to the Catch VPN
+  - name: Partner API
+    description: Partner API accessible over the internet using IP whitelisting in prod
+
+paths:
+  "/webhook":
+    post:
+      operationId: webhook
+      tags:
+        - Partner API
+      parameters:
+        - in: header
+          name: pcs-signature
+          schema:
+            type: string
+          required: true
+      description: "Receives Click and Collect order status updates"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderStatusUpdate"
+      responses:
+        "200":
+          description: "Message successfully received"
+        "400":
+          description: Bad request data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  "/api/stores":
+    get:
+      operationId: getStores
+      tags:
+        - Internal API
+      description: "Get a list of all stores (or within a radius) marked as collection points."
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: "Filter response by store type (eg. Target)"
+        - in: query
+          name: searchMode
+          schema:
+            type: string
+            enum:
+              - list
+              - proximity
+            default: list
+          description: >-
+            specify search mechanism:
+             - list: find all stores
+             - proximity: find stores based on proximity to a given point
+        - in: query
+          name: proximityRadius
+          description: Distance in KM as a radius value to search
+          schema:
+            type: number
+            default: 20
+        - in: query
+          name: proximityLocation
+          description: Geolocation to use as the center of the proximity search
+          schema:
+            type: string
+            example: -34.207915,144.440348
+      responses:
+        "200":
+          description: "Successful response returning a list of stores"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stores"
+        "404":
+          description: "Error returning stores when filtering by type"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreError"
+
+  "/api/stores/near/{postcode}":
+    get:
+      operationId: getNearbyStoresByPostcode
+      tags:
+        - Internal API
+      description: "Get a list of all stores available for click and collect near a given postcode. default 10km radius."
+      deprecated: true
+      parameters:
+        - name: postcode
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Postcode to search nearby"
+        - in: query
+          name: distance
+          schema:
+            type: string
+          description: "Distance in KM as a radius value to search"
+      responses:
+        "200":
+          description: "Successful response returning a list of stores near the given postcode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NearbyStores"
+        "404":
+          description: "Error returning stores when searching nearby"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostcodeError"
+
+  "/api/stores/valid":
+    get:
+      operationId: getStoreAddressValidation
+      tags:
+        - Internal API
+      description: "Validate a given store address. Query params provided should match that returned from a GET request."
+      parameters:
+        - in: query
+          name: addressLine1
+          schema:
+            type: string
+          description: "Address line 1 of store"
+          required: true
+        - in: query
+          name: addressLine2
+          schema:
+            type: string
+          description: "Address line 2 of store"
+          required: true
+        - in: query
+          name: city
+          schema:
+            type: string
+          description: "Store address city/suburb"
+          required: true
+        - in: query
+          name: state
+          schema:
+            type: string
+          description: "Store address state"
+          required: true
+        - in: query
+          name: postcode
+          schema:
+            type: string
+          description: "Store address postcode"
+          required: true
+      responses:
+        "200":
+          description: "Store validation check returned successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidStore"
+
+  "/api/orders/{id}":
+    get:
+      operationId: getOrder
+      tags:
+        - Internal API
+      description: "Used by Unity to fetch the status of a click and collect order. A valid order code must be provided."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Catch order code (ie. C12345678)"
+      responses:
+        "200":
+          description: "Successful response returning order status information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: boolean
+          description: "Indicates the response is an error response"
+          example: true
+        message:
+          type: string
+          description: "error description message"
+          example: "The request was not signed."
+        code:
+          type: integer
+          description: "HTTP response code"
+          example: 400
+    StoreError:
+      type: object
+      properties:
+        error:
+          type: boolean
+          description: "Indicates the response is an error response"
+          example: true
+        message:
+          type: string
+          description: "error description message"
+          example: "Unknown Store 'Kmart'"
+        code:
+          type: integer
+          description: "HTTP response code"
+          example: 404
+    PostcodeError:
+      type: object
+      properties:
+        error:
+          type: boolean
+          description: "Indicates the response is an error response"
+          example: true
+        message:
+          type: string
+          description: "error description message"
+          example: "Unknown Postcode '123'"
+        code:
+          type: integer
+          description: "Postcode not found"
+          example: 404
+
+    OrderStatusUpdate:
+      description: "Click and Collect order status update request"
+      type: object
+      required:
+        - code
+        - status
+      properties:
+        code:
+          type: string
+          description: "Parcel ID (external_id)"
+          example: "00099999167106709811"
+        status:
+          type: string
+          example: RECEIPTED
+          description: "New status of the parcel"
+          enum:
+            [
+              DELIVERED_TO_STORE,
+              RECEIPTED,
+              LOCATED,
+              PICKED_UP,
+              RETURNED_TO_FLOOR,
+              CANCELLED,
+            ]
+
+    Stores:
+      description: "Array of store objects"
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Store"
+
+    NearbyStores:
+      description: "Array of store objects within a given distance from a postcode"
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Store"
+
+    ValidStore:
+      type: object
+      description: "Array of store objects within a given distance from a postcode"
+      properties:
+        valid:
+          type: boolean
+          description: "Indicates if the store address provide was valid or not"
+          example: true
+        store:
+          $ref: "#/components/schemas/Store"
+
+    Store:
+      type: object
+      required:
+        - id
+        - externalId
+        - type
+        - name
+        - addressLine1
+        - city
+        - state
+        - postcode
+        - country
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          description: "The store ID within the Click and Collect service"
+          example: 23
+        externalId:
+          type: string
+          description: "Unique Store ID as known by the Store chain"
+        type:
+          type: string
+          description: "The store type"
+          example: "Target"
+        name:
+          type: string
+          description: "The store name, typically a suburb or shopping centre name"
+          example: "Chatswood"
+        addressLine1:
+          type: string
+          description: "Store Address"
+          example: "Westfield Shopping Town"
+        addressLine2:
+          type: string
+          description: "Store Address"
+          example: "Spring Street"
+        city:
+          type: string
+          description: "Store address city/suburb"
+          example: "Chatswood"
+        state:
+          type: string
+          description: "Store address state"
+          example: "New South Wales"
+        postcode:
+          type: string
+          description: "Store address postcode"
+          example: "2067"
+        country:
+          type: string
+          description: "Store address country"
+          example: "AU"
+        latitude:
+          type: number
+          description: "Store location latitude"
+          example: -33.79685
+        longitude:
+          type: number
+          description: "Store location longitude"
+          example: 151.184244
+        proximity:
+          type: number
+          description: "Displays distance in KM from the geolocation used when performing 'proximity' search"
+          example: 12.5
+
+    Order:
+      type: object
+      properties:
+        order:
+          type: string
+          description: "The Catch order code"
+          example: "C12345678"
+        collectionCode:
+          type: string
+          description: "The code used to identify the order at pickup"
+          example: "Target"
+        store:
+          $ref: "#/components/schemas/Store"
+        parcels:
+          type: array
+          description: "Parcels within the order"
+          items:
+            $ref: "#/components/schemas/Parcel"
+
+    Parcel:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: "Unique parcel ID within click and collect service"
+          example: "09a7ccc9-ecb5-4480-bcd6-e5d0260c8d09"
+        logisticOrder:
+          type: string
+          description: "The Catch logistic order code"
+          example: "C12345678-A"
+        article:
+          type: string
+          description: "Article ID"
+          example: "00293464277067211262"
+        storeId:
+          type: string
+          description: "Unique Store ID (external_id) within the store chain"
+          example: "5286"
+        status:
+          type: string
+          description: "Status ID as per click and collect service (Catch status ID)"
+          example: "CNC_AWAITING_COLLECTION"
+          enum:
+            - CNC_PENDING
+            - CNC_CREATED
+            - CNC_FAILED
+            - CNC_DELIVERED_TO_STORE
+            - CNC_AWAITING_COLLECTION
+            - CNC_COLLECTED
+            - CNC_CANCELLED
+        statusName:
+          type: string
+          description: "Status display name"
+          example: "Awaiting Collection"
+        created:
+          type: string
+          description: "Date and time parcel was created in the click and collect service"
+          example: "28 Apr 2020 22:20"
+        updated:
+          type: string
+          description: "Date and time parcel was last updated in the click and collect service"
+          example: "04 Jun 2020 16:34"
+        history:
+          type: array
+          description: "Status history of the parcel"
+          items:
+            $ref: "#/components/schemas/ParcelHistory"
+
+    ParcelHistory:
+      type: object
+      properties:
+        parcelId:
+          type: string
+          description: "Parcel ID this history relates to"
+          example: "09a7ccc9-ecb5-4480-bcd6-e5d0260c8d09"
+        oldStatus:
+          type: string
+          description: "Status ID as per click and collect service (Catch status ID) before the update"
+          example: "CNC_CREATED"
+          enum:
+            - CNC_PENDING
+            - CNC_CREATED
+            - CNC_FAILED
+            - CNC_DELIVERED_TO_STORE
+            - CNC_AWAITING_COLLECTION
+            - CNC_COLLECTED
+            - CNC_CANCELLED
+        newStatus:
+          type: string
+          description: "Status ID as per click and collect service (Catch status ID) after the update"
+          example: "CNC_AWAITING_COLLECTION"
+          enum:
+            - CNC_PENDING
+            - CNC_CREATED
+            - CNC_FAILED
+            - CNC_DELIVERED_TO_STORE
+            - CNC_AWAITING_COLLECTION
+            - CNC_COLLECTED
+            - CNC_CANCELLED
+        oldStatusName:
+          type: string
+          description: "Status display name before the update"
+          example: "Created"
+        newStatusName:
+          type: string
+          description: "Status display name after the update"
+          example: "Awaiting Collection"
+        created:
+          type: string
+          description: "Date and time parcel was created in the click and collect service"
+          example: "28 Apr 2020 22:20"
+        updated:
+          type: string
+          description: "Date and time parcel was last updated in the click and collect service"
+          example: "04 Jun 2020 16:34"

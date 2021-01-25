@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pseudo\AsyncExamples\Swoole\Test\IntegrationWhitebox;
+namespace Pseudo\AsyncExamples\ReactPHP\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Pseudo\AsyncExamples\Swoole\AppConfig
+ * @covers \Pseudo\AsyncExamples\ReactPHP\AppServer
  */
 class TempTest extends TestCase
 {
