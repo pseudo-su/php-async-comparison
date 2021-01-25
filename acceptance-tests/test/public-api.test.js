@@ -1,14 +1,23 @@
+const request = require("supertest");
 const jestOpenAPI = require("jest-openapi");
 const { PostmanBuilder } = require("../src/postman");
 const { envConfig } = require("./config");
 
-const { OPENAPI_FILEPATH } = envConfig;
+const { OPENAPI_FILEPATH, API_SCHEME, API_HOST, API_PORT, API_PATH } = envConfig;
 
 jestOpenAPI(OPENAPI_FILEPATH);
 
-// function getTestDescription() {
-//   return expect.getState().currentTestName;
-// }
+function baseUrl() {
+  return `${API_SCHEME}://${API_HOST}:${API_PORT}${API_PATH}`;
+}
+
+function createRequest() {
+  return request(baseUrl());
+}
+
+function getTestDescription() {
+  return expect.getState().currentTestName;
+}
 
 describe("API Acceptance", () => {
   /** @type PostmanBuilder */
@@ -23,14 +32,14 @@ describe("API Acceptance", () => {
   });
 
   describe("Internal API", () => {
-    test.todo("Get stores");
-    test.todo("Get stores by proximity");
-    test.todo("Get store validity");
-    test.todo("Get order");
-  });
+    test("GET /examples", async () => {
+      let request = createRequest().get(`/examples`);
 
-  describe("Partner API", () => {
-    test.todo("Webhook PCS parcel");
-    test.todo("Webhook 'third party' (emailonly)");
+      postmanBuilder.addRequest(request, getTestDescription());
+
+      const response = await request;
+      expect(response.status).toEqual(200);
+      expect(response).toSatisfyApiSpec();
+    });
   });
 });
