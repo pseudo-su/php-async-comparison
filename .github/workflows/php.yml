@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  validate-acceptance-tests:
+  verify-acceptance-suite:
     runs-on: ubuntu-20.04
     name: "Validate acceptance tests"
     steps:
@@ -24,7 +24,7 @@ jobs:
       - name: Verify acceptance-tests
         run: yarn --cwd acceptance-tests/ verify
 
-  validate-projects:
+  build-and-test:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
@@ -145,3 +145,23 @@ jobs:
         with:
           name: ${{ env.matrix-key }}-acceptance-test-reports
           path: acceptance-tests/reports/
+
+  publish-test-results:
+    name: "Publish Unit Tests Results"
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    if: success() || failure()
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.7
+        with:
+          check_name: Unit Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: "**/reports/**/junit.xml"
