@@ -69,45 +69,45 @@ jobs:
 
       # -- App
 
-      - name: Cache vendor/ packages
+      - name: Cache vendor/
         id: composer-cache
         uses: actions/cache@v2
         with:
-          path: packages/${{ matrix.package }}/vendor
+          path: projects/${{ matrix.package }}/vendor
           key: ${{ runner.os }}-${{ env.matrix-key }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.matrix-key }}-php-
 
-      - name: Cache vendor-bin/tools/vendor/ packages
+      - name: Cache vendor-bin/tools/vendor/
         id: composer-bin-cache
         uses: actions/cache@v2
         with:
-          path: packages/${{ matrix.package }}/vendor-bin/tools/vendor
+          path: projects/${{ matrix.package }}/vendor-bin/tools/vendor
           key: ${{ runner.os }}-${{ env.matrix-key }}-php-bin-${{ hashFiles('**/vendor-bin/**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.matrix-key }}-php-bin-
 
       - name: Validate composer.json and composer.lock
-        run: composer --working-dir=packages/${{ matrix.package }} validate
+        run: composer --working-dir=projects/${{ matrix.package }} validate
 
       - name: Install Composer dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer --working-dir=packages/${{ matrix.package }} install --prefer-dist --no-progress --no-suggest
+        run: composer --working-dir=projects/${{ matrix.package }} install --prefer-dist --no-progress --no-suggest
 
       - name: Verify
-        run: composer --working-dir=packages/${{ matrix.package }} verify
+        run: composer --working-dir=projects/${{ matrix.package }} verify
 
       - name: Start devstack
-        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up --build -d devstack_app
+        run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up --build -d devstack_app
 
       - name: Run all tests
-        run: composer --working-dir=packages/${{ matrix.package }} test
+        run: composer --working-dir=projects/${{ matrix.package }} test
 
       - name: Stop devstack
         if: ${{ always() }}
-        run: docker-compose -f packages/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  down
+        run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  down
 
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.matrix-key }}-reports
-          path: packages/${{ matrix.package }}/reports/
+          path: projects/${{ matrix.package }}/reports/
