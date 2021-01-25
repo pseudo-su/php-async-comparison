@@ -1,4 +1,4 @@
-# PHP Async examples
+# PHP Async Comparison
 
 The goal of this project is to explore different async runtimes and framework combinations in PHP with example projects.
 
@@ -24,10 +24,4 @@ Features:
 | `roadrunner-spiral`    | roadrunner     | spiral    | ❌             |
 | `swoole`               | swoole         | N/A       | 🚧             |
 | `swoole-swoft`         | swoole         | swoft     | ❌             |
-| `swoole-slim`          | swoole         | swoft     | ❌             |
-
-## TODO
-
-- Testing
-  - Use OpenAPI and/or AsyncAPI specs in blackbox tests.
-  - Create API Smoke test suite.
+| `swoole-slim`          | swoole         | slim      | ❌             |
