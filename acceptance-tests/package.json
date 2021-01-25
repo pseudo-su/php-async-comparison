@@ -37,13 +37,13 @@
   },
   "jest-html-reporter": {
     "pageTitle": "Acceptance API Tests",
-    "outputPath": "./out/test-report.html",
+    "outputPath": "./reports/test-report.html",
     "includeFailureMsg": true,
     "includeConsoleLog": true
   },
   "jest-junit": {
     "suiteName": "API Acceptance Tests",
-    "outputDirectory": "out",
+    "outputDirectory": "reports",
     "outputName": "junit.xml",
     "uniqueOutputName": "false",
     "classNameTemplate": "{classname}-{title}",

@@ -97,11 +97,17 @@ jobs:
       - name: Verify
         run: composer --working-dir=projects/${{ matrix.package }} verify
 
-      - name: Start devstack
+      - name: Start devstack_app_deps
+        run: docker-compose -f docker-compose.yaml  up --build -d devstack_app_deps
+
+      - name: Run project unit and (whitebox) integration tests
+        run: composer --working-dir=projects/${{ matrix.package }} test
+
+      - name: Start devstack_app
         run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml  up --build -d devstack_app
 
-      - name: Run all tests
-        run: composer --working-dir=projects/${{ matrix.package }} test
+      - name: Run project unit and (whitebox) integration tests
+        run: yarn --cwd acceptance-tests/ test
 
       - name: Stop devstack
         if: ${{ always() }}
@@ -111,3 +117,8 @@ jobs:
         with:
           name: ${{ env.matrix-key }}-reports
           path: projects/${{ matrix.package }}/reports/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.matrix-key }}-acceptance-test-reports
+          path: acceptance-tests/reports/

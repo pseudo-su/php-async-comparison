@@ -195,12 +195,12 @@ class PostmanBuilder {
     const files = [
       {
         name: "environment",
-        filename: `out/${toFilename(this.name)}.postman-environment.json`,
+        filename: `reports/${toFilename(this.name)}.postman-environment.json`,
         content: environment,
       },
       {
         name: "collection",
-        filename: `out/${toFilename(this.name)}.postman-collection.json`,
+        filename: `reports/${toFilename(this.name)}.postman-collection.json`,
         content: collection,
         postProcess: (fileContent) => {
           // NOTE: this is a bit of a hacky way to template the entire collection file all at once

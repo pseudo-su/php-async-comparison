@@ -22,7 +22,7 @@ const envConfig = cleanEnv(
     AMQP_PORT: num({ default: 5672 }),
     AMQP_PATH: str({ default: "/" }),
     // AsyncAPI Spec
-    OPENAPI_FILEPATH: str({
+    ASYNCAPI_FILEPATH: str({
       default: path.join(__dirname, "asyncapi.yaml"),
     }),
   },
