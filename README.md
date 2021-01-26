@@ -16,14 +16,16 @@ Features:
 
 ## Table comparison
 
-| Project                | Status | Runtime        | Framework | Libraries                 | Acceptance tests |
-|------------------------|--------|----------------|-----------|---------------------------|------------------|
-| `amp`                  | ❌      | amp            | N/A       |                           |                  |
-| `reactphp`             | 🚧     | reactphp       | N/A       |                           |                  |
-| `reactphp-driftphp`    | ❌      | reactphp       | driftphp  |                           |                  |
-| `reactphp-ppm-symfony` | ❌      | reactphp + ppm | symfony   |                           |                  |
-| `roadrunner`           | ❌      | roadrunner     | N/A       |                           |                  |
-| `roadrunner-spiral`    | ❌      | roadrunner     | spiral    |                           |                  |
-| `swoole`               | 🚧     | swoole         | N/A       | `php-amqplib/php-amqplib` |                  |
-| `swoole-slim`          | ❌      | swoole         | slim      |                           |                  |
-| `swoole-swoft`         | ❌      | swoole         | swoft     |                           |                  |
+![](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pseudo-su/7cc457b63114c8042d88652573411bed/raw/reactphp.json)
+
+| Project                | Status | Runtime        | Framework | Libraries                 | badges                                                                                                                                   |
+|------------------------|--------|----------------|-----------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| `amp`                  | ❌      | amp            | N/A       |                           |                                                                                                                                          |
+| `reactphp`             | 🚧     | reactphp       | N/A       |                           | ![](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pseudo-su/7cc457b63114c8042d88652573411bed/raw/reactphp.json) |
+| `reactphp-driftphp`    | ❌      | reactphp       | driftphp  |                           |                                                                                                                                          |
+| `reactphp-ppm-symfony` | ❌      | reactphp + ppm | symfony   |                           |                                                                                                                                          |
+| `roadrunner`           | ❌      | roadrunner     | N/A       |                           |                                                                                                                                          |
+| `roadrunner-spiral`    | ❌      | roadrunner     | spiral    |                           |                                                                                                                                          |
+| `swoole`               | 🚧     | swoole         | N/A       | `php-amqplib/php-amqplib` | ![](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pseudo-su/7cc457b63114c8042d88652573411bed/raw/swoole.json)   |
+| `swoole-slim`          | ❌      | swoole         | slim      |                           |                                                                                                                                          |
+| `swoole-swoft`         | ❌      | swoole         | swoft     |                           |                                                                                                                                          |

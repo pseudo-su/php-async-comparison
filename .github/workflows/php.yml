@@ -130,6 +130,7 @@ jobs:
         run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml up --build -d devstack_app
 
       - name: Run project acceptance tests
+        id: project-acceptance-tests
         run: yarn --cwd acceptance-tests/ test
 
       - name: Stop devstack
@@ -147,6 +148,35 @@ jobs:
         with:
           name: ${{ env.matrix-key }}-acceptance-test-reports
           path: acceptance-tests/reports/
+
+      - name: Badge values
+        id: badge-values
+        env:
+          # success, failure, cancelled, or skipped
+          TEST_OUTCOME: ${{ steps.project-acceptance-tests.outcome }}
+        run: |
+          echo "::set-output name=badge-color::orange"
+          echo "::set-output name=badge-label::tests"
+          echo "::set-output name=badge-message::$TEST_OUTCOME"
+
+          if [ "$TEST_OUTCOME" = "success" ]; then
+            echo "::set-output name=badge-color::green"
+          fi;
+
+          if [ "$TEST_OUTCOME" = "failure" ]; then
+            echo "::set-output name=badge-color::red"
+          fi;
+
+      - name: Store badge data
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        if: ${{ always() }}
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 7cc457b63114c8042d88652573411bed
+          filename: ${{ matrix.package }}.json
+          color: ${{ steps.badge-values.outputs.badge-color }}
+          label: ${{ steps.badge-values.outputs.badge-label }}
+          message: ${{ steps.badge-values.outputs.badge-message }}
 
   publish-test-results:
     name: "Publish test reports"
