@@ -34,8 +34,15 @@ jobs:
         php-version:
           - '8.0'
         package:
+          - amp
           - reactphp
+          # - reactphp-driftphp
+          # - reactphp-ppm-symfony
+          # - roadrunner
+          # - roadrunner-spiral
           - swoole
+          # - swoole-slim
+          # - swoole-swoft
     name: "${{ matrix.package }} - PHP ${{ matrix.php-version }} ${{ matrix.operating-system }}"
     env:
       php-extensions: swoole
@@ -124,6 +131,7 @@ jobs:
         run: docker-compose -f projects/${{ matrix.package }}/docker-compose.yaml -f docker-compose.yaml up --build -d devstack_app_deps
 
       - name: Run project unit and (whitebox) integration tests
+        id: project-tests
         run: composer --working-dir=projects/${{ matrix.package }} test
 
       - name: Start devstack_app
@@ -151,34 +159,82 @@ jobs:
 
       - name: Badge values
         id: badge-values
+        if: always()
         env:
           # success, failure, cancelled, or skipped
-          TEST_OUTCOME: ${{ steps.project-acceptance-tests.outcome }}
+          PROJECT_TESTS_OUTCOME: ${{ steps.project-tests.outcome }}
+          ACCEPTANCE_TESTS_OUTCOME: ${{ steps.project-acceptance-tests.outcome }}
           GREEN: "#34D058"
           RED: "red"
+          GRAY: "#EEEEEE"
         run: |
-          echo "::set-output name=badge-color::orange"
-          echo "::set-output name=badge-label::tests"
-          echo "::set-output name=badge-message::$TEST_OUTCOME"
+          echo "::set-output name=project-tests-badge-color::$GRAY"
+          echo "::set-output name=project-tests-badge-label::phpunit-tests"
+          echo "::set-output name=project-tests-badge-message::$PROJECT_TESTS_OUTCOME"
 
-          if [ "$TEST_OUTCOME" = "success" ]; then
-            echo "::set-output name=badge-color::$GREEN"
+          if [ "$PROJECT_TESTS_OUTCOME" = "success" ]; then
+            echo "::set-output name=project-tests-badge-color::$GREEN"
+          echo "::set-output name=project-tests-badge-message::pass"
           fi;
 
-          if [ "$TEST_OUTCOME" = "failure" ]; then
-            echo "::set-output name=badge-color::$RED"
+          if [ "$PROJECT_TESTS_OUTCOME" = "failure" ]; then
+            echo "::set-output name=project-tests-badge-color::$RED"
+            echo "::set-output name=project-tests-badge-message::fail"
+          fi;
+
+          if [ "$PROJECT_TESTS_OUTCOME" = "cancelled" ]; then
+            echo "::set-output name=project-tests-badge-color::$RED"
+          fi;
+
+          if [ "$PROJECT_TESTS_OUTCOME" = "skipped" ]; then
+            echo "::set-output name=project-tests-badge-color::$GRAY"
+            echo "::set-output name=project-tests-badge-message::N/A"
+          fi;
+
+          echo "::set-output name=acceptance-tests-badge-color::$GRAY"
+          echo "::set-output name=acceptance-tests-badge-label::acceptance-tests"
+          echo "::set-output name=acceptance-tests-badge-message::$ACCEPTANCE_TESTS_OUTCOME"
+
+          if [ "$ACCEPTANCE_TESTS_OUTCOME" = "success" ]; then
+            echo "::set-output name=acceptance-tests-badge-color::$GREEN"
+            echo "::set-output name=acceptance-tests-badge-message::pass"
+          fi;
+
+          if [ "$ACCEPTANCE_TESTS_OUTCOME" = "failure" ]; then
+            echo "::set-output name=acceptance-tests-badge-color::$RED"
+            echo "::set-output name=acceptance-tests-badge-message::fail"
+          fi;
+
+          if [ "$ACCEPTANCE_TESTS_OUTCOME" = "cancelled" ]; then
+            echo "::set-output name=acceptance-tests-badge-color::$RED"
+          fi;
+
+          if [ "$ACCEPTANCE_TESTS_OUTCOME" = "skipped" ]; then
+            echo "::set-output name=acceptance-tests-badge-color::$GRAY"
+            echo "::set-output name=acceptance-tests-badge-message::N/A"
           fi;
 
       - name: Store badge data
         uses: schneegans/dynamic-badges-action@v1.0.0
-        if: ${{ always() }}
+        if: always() && github.ref == 'refs/heads/main'
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 7cc457b63114c8042d88652573411bed
-          filename: ${{ matrix.package }}.json
-          color: ${{ steps.badge-values.outputs.badge-color }}
-          label: ${{ steps.badge-values.outputs.badge-label }}
-          message: ${{ steps.badge-values.outputs.badge-message }}
+          filename: ${{ matrix.package }}-project-tests.json
+          color: ${{ steps.badge-values.outputs.project-tests-badge-color }}
+          label: ${{ steps.badge-values.outputs.project-tests-badge-label }}
+          message: ${{ steps.badge-values.outputs.project-tests-badge-message }}
+
+      - name: Store badge data
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        if: always() && github.ref == 'refs/heads/main'
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 7cc457b63114c8042d88652573411bed
+          filename: ${{ matrix.package }}-acceptance-tests.json
+          color: ${{ steps.badge-values.outputs.acceptance-tests-badge-color }}
+          label: ${{ steps.badge-values.outputs.acceptance-tests-badge-label }}
+          message: ${{ steps.badge-values.outputs.acceptance-tests-badge-message }}
 
   publish-test-results:
     name: "Publish test reports"
