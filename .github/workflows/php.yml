@@ -36,13 +36,13 @@ jobs:
         package:
           - amp
           - reactphp
-          # - reactphp-driftphp
-          # - reactphp-ppm-symfony
-          # - roadrunner
-          # - roadrunner-spiral
+          - reactphp-driftphp
+          - reactphp-ppm-symfony
+          - roadrunner
+          - roadrunner-spiral
           - swoole
-          # - swoole-slim
-          # - swoole-swoft
+          - swoole-slim
+          - swoole-swoft
     name: "${{ matrix.package }} - PHP ${{ matrix.php-version }} ${{ matrix.operating-system }}"
     env:
       php-extensions: swoole
