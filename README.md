@@ -2,6 +2,10 @@
 
 This project is to explore different async runtimes and framework combinations in PHP with example projects.
 
+Links:
+
+- https://engineering.facile.it/blog/eng/common-problems-faced-by-php-developers-in-consuming-an-ampq-message/
+
 ## Goals
 
 The aim is to implement a standard set of features/functionality in various different runtime+framework combinations to compare the implementations.
