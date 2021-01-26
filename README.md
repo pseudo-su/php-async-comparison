@@ -1,10 +1,10 @@
 # PHP Async Comparison
 
-The goal of this project is to explore different async runtimes and framework combinations in PHP with example projects.
+This project is to explore different async runtimes and framework combinations in PHP with example projects.
 
 ## Goals
 
-The Goal is to implement a standard set of features/functionality in various different runtime+framework combinations to compare the implementations.
+The aim is to implement a standard set of features/functionality in various different runtime+framework combinations to compare the implementations.
 
 Features:
 
@@ -14,14 +14,14 @@ Features:
 
 ## Table comparison
 
-| Project                | Runtime        | Framework | Implementation |
-| ---------------------- | -------------- | --------- | -------------- |
-| `amp`                  | amp            | N/A       | ❌             |
-| `reactphp`             | reactphp       | N/A       | 🚧             |
-| `reactphp-driftphp`    | reactphp       | driftphp  | ❌             |
-| `reactphp-ppm-symfony` | reactphp + ppm | symfony   | ❌             |
-| `roadrunner`           | roadrunner     | N/A       | ❌             |
-| `roadrunner-spiral`    | roadrunner     | spiral    | ❌             |
-| `swoole`               | swoole         | N/A       | 🚧             |
-| `swoole-swoft`         | swoole         | swoft     | ❌             |
-| `swoole-slim`          | swoole         | slim      | ❌             |
+| Project                | Status | Runtime        | Framework | Libraries                 |
+|------------------------|--------|----------------|-----------|---------------------------|
+| `amp`                  | ❌      | amp            | N/A       |                           |
+| `reactphp`             | 🚧     | reactphp       | N/A       |                           |
+| `reactphp-driftphp`    | ❌      | reactphp       | driftphp  |                           |
+| `reactphp-ppm-symfony` | ❌      | reactphp + ppm | symfony   |                           |
+| `roadrunner`           | ❌      | roadrunner     | N/A       |                           |
+| `roadrunner-spiral`    | ❌      | roadrunner     | spiral    |                           |
+| `swoole`               | 🚧     | swoole         | N/A       | `php-amqplib/php-amqplib` |
+| `swoole-slim`          | ❌      | swoole         | slim      |                           |
+| `swoole-swoft`         | ❌      | swoole         | swoft     |                           |
