@@ -1,4 +1,4 @@
-name: PHP Composer
+name: build-and-test-all
 
 on:
   push:
@@ -154,17 +154,19 @@ jobs:
         env:
           # success, failure, cancelled, or skipped
           TEST_OUTCOME: ${{ steps.project-acceptance-tests.outcome }}
+          GREEN: "#34D058"
+          RED: "red"
         run: |
           echo "::set-output name=badge-color::orange"
           echo "::set-output name=badge-label::tests"
           echo "::set-output name=badge-message::$TEST_OUTCOME"
 
           if [ "$TEST_OUTCOME" = "success" ]; then
-            echo "::set-output name=badge-color::green"
+            echo "::set-output name=badge-color::$GREEN"
           fi;
 
           if [ "$TEST_OUTCOME" = "failure" ]; then
-            echo "::set-output name=badge-color::red"
+            echo "::set-output name=badge-color::$RED"
           fi;
 
       - name: Store badge data

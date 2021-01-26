@@ -2,7 +2,7 @@
 
 This project is to explore different async runtimes and framework combinations in PHP with example projects.
 
-![PHP Composer](https://github.com/pseudo-su/php-async-comparison/workflows/PHP%20Composer/badge.svg)
+![PHP Composer](https://github.com/pseudo-su/php-async-comparison/workflows/build-and-test-all/badge.svg)
 
 ## Goals
 
@@ -15,8 +15,6 @@ Features:
 - Async compatible postgres DB/ORM implementation
 
 ## Table comparison
-
-![](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/pseudo-su/7cc457b63114c8042d88652573411bed/raw/reactphp.json)
 
 | Project                | Status | Runtime        | Framework | Libraries                 | badges                                                                                                                                   |
 |------------------------|--------|----------------|-----------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
