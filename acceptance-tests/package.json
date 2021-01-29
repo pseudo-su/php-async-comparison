@@ -1,7 +1,7 @@
 {
   "name": "@pseudo/acceptance-tests",
   "version": "1.0.0",
-  "description": "Acceptance tests for Catch APIs",
+  "description": "Acceptance tests",
   "scripts": {
     "test": "jest -- test/*",
     "verify": "npm-run-all verify:eslint verify:spectral",
@@ -11,7 +11,6 @@
     "verify:fix:eslint": "eslint --max-warnings=0 --fix src suites *js"
   },
   "author": "",
-  "repository": "https://github.com/CatchoftheDay/api-tests-acceptance",
   "license": "UNLICENSED",
   "dependencies": {
     "@stoplight/spectral": "^5.7.1",

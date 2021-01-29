@@ -30,32 +30,15 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          # - amp
+          - amp
           - reactphp
-          # - reactphp-driftphp
-          # - reactphp-ppm-symfony
-          # - roadrunner
-          # - roadrunner-spiral
+          - reactphp-driftphp
+          - reactphp-ppm-symfony
+          - roadrunner
+          - roadrunner-spiral
           - swoole
-          # - swoole-slim
-          # - swoole-swoft
-        include:
-          # INCLUDE combinations not-yet-passing test suites
-          - package: amp
-            continue-on-error: true
-          - package: reactphp-driftphp
-            continue-on-error: true
-          - package: reactphp-ppm-symfony
-            continue-on-error: true
-          - package: roadrunner
-            continue-on-error: true
-          - package: roadrunner-spiral
-            continue-on-error: true
-          - package: swoole-slim
-            continue-on-error: true
-          - package: swoole-swoft
-            continue-on-error: true
-    continue-on-error: ${{ matrix.continue-on-error || false }}
+          - swoole-slim
+          - swoole-swoft
     name: "${{ matrix.package }}"
     env:
       php-version: '8.0'
